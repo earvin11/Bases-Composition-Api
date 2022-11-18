@@ -1,9 +1,18 @@
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/about">About</router-link> |
+    <router-link :to="{ name: 'counter' }">Counter</router-link> |
+    <router-link :to="{ name: 'users' }">Users</router-link> |
+    <router-link :to="{ name: 'pokemon-search' }">Search Pokemon</router-link>
   </nav>
-  <router-view/>
+  <router-view v-slot="{ Component, route }">
+    <!-- el keep alive es para no desmontar los components si no se hace refresh de la app -->
+    <!-- con el keep alive se mantiene los estados y la data en los components -->
+    <keep-alive>
+      <component :is="Component" :key="route.name" />
+    </keep-alive>
+  </router-view>
 </template>
 
 <style>
