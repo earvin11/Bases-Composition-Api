@@ -4,14 +4,13 @@
   <h5 v-if="errorMessage">{{ errorMessage }}</h5>
 
   <div  v-if="users.length > 0">
-
-    <userList
-        :users="users"
-        v-slot="{ user }">
-        <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-        <span>{{ user.email }}</span>
-    </userList>
-
+    <ul>
+        <!-- Destructuring de lo que trae user en el array users -->
+        <li v-for="{ first_name, last_name, email, id } in users" :key="id">
+            <h4>{{ first_name }} {{ last_name }}</h4>
+            <h6>{{ email }}</h6>
+        </li>
+    </ul>
   </div>
 
   <button @click="previousPage">Atras</button>
@@ -24,13 +23,8 @@
 
 // import { ref } from 'vue'
 import useUsers from '@/composables/useUsers'
-import UserList from '@/components/UserList.vue'
 
 export default {
-
-    components: {
-        UserList,
-    },
 
     setup() {
 

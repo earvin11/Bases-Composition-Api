@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import { v4 as uuidV4 } from 'uuid'
 
 export default createStore({
   state: {
@@ -10,9 +11,22 @@ export default createStore({
       { id: '5', text: 'Conseguir nuevos secuaces competentes', completed: false },
     ]
   },
-  getters: {
-  },
   mutations: {
+    toggleTodo( state, id ) {
+      const todoIdx = state.todos.findIndex( t => t.id === id)
+      state.todos[todoIdx].completed = !state.todos[todoIdx].completed      
+    },
+    createTodo( state, text = '' ) {
+      if( text.length <= 1 ) return
+
+      state.todos.push({
+        id: uuidV4(),
+        completed: false,
+        text
+      })
+
+
+    }
   },
   actions: {
   },

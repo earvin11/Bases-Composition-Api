@@ -35,64 +35,43 @@
     </ul>
   </div>
 
-  <button @click="isOpen = true">Crear TODO</button>
-
-  <modal v-if="isOpen"
-         @on:close="isOpen = false">
-    <template v-slot:header>
-      <h2>Crea un TODO</h2>
-    </template>
-
-    <template v-slot:body>
-
-      <form @submit.prevent="createTodo( txtModal ); isOpen=false">
-
-        <input 
-          v-model="txtModal"
-          type="text"
-          placeholder="Nueva tarea">
-
-          <br>
-          <br>
-
-          <button type="submit">Crear</button>
-
-      </form>
-
-    </template>
-
-  </modal>
-
 </template>
 
 <script>
-import useTodo from '@/composables/useTodo'
-import Modal from '@/components/Modal.vue'
-import { ref } from 'vue'
+
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 
 export default {
 
-  components: { Modal },
-
   setup() {
 
-    const { all, currentTab, getTodosByTab, toggleTodo, pending, createTodo } = useTodo()
+    const store = useStore()
 
+    const currentTab = ref('all')
 
-    
+    // const toggleTodo = ( id ) => {
+    //   store.commit('toogleTodo', id)
+    // }
 
     return {
-      all, 
-      currentTab, 
-      getTodosByTab, 
-      pending,
-      toggleTodo,
-      createTodo,
+      currentTab,
 
-      //Modal
-      isOpen: ref(false),
-      txtModal: ref(null)
+      // Pending sera una propiedad computada, ve al store, a los getters, trae el getter 'pendingTodos'
+      pending: computed( () => store.getters['pendingTodos']),
+      all: computed(() => store.getters['allTodos']),
+      completed: computed(() => store.getters['completedTodos']),
+
+      // Esto crea una computada usando el getter getTodosByTab, el cual es una funcion que recibe otra funcion
+      // al este getter retornar una funcion este debe ser ejecutado enviandole como argumento el currenTab.value necesario para la funcion
+      getTodosByTab: computed(() => store.getters['getTodosByTab']( currentTab.value )),
+
+      //Methods
+      // crea una funcion toogleTodo que realice un commit con la mutation toggleTodo enviandole el id como parametro
+      toggleTodo: (id) => store.commit('toggleTodo', id),
+
     }
+
   }
 
 }
